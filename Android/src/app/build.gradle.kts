@@ -13,6 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import java.util.Properties
+ 
+ // Load local.properties
+ val localProperties = Properties().apply {
+     val localPropertiesFile = rootProject.file("local.properties")
+     if (localPropertiesFile.exists()) {
+         localPropertiesFile.inputStream().use { load(it) }
+     }
+ }
 
 plugins {
   alias(libs.plugins.android.application)
@@ -32,6 +41,7 @@ android {
   namespace = "com.google.ai.edge.gallery"
   compileSdk = 35
 
+
   defaultConfig {
     applicationId = "com.google.aiedge.gallery"
     minSdk = 31
@@ -46,6 +56,7 @@ android {
     manifestPlaceholders["applicationName"] = "com.google.ai.edge.gallery.GalleryApplication"
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    buildConfigField("String", "BRAVE_API_KEY", "\"${localProperties["BRAVE_API_KEY"] ?: ""}\"")
   }
 
   buildTypes {

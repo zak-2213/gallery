@@ -46,6 +46,7 @@ enum class ChatMessageType {
   WEBVIEW,
   COLLAPSABLE_PROGRESS_PANEL,
   THINKING,
+  SEARCH_RESULTS,
 }
 
 enum class ChatSide {
@@ -53,6 +54,15 @@ enum class ChatSide {
   AGENT,
   SYSTEM,
 }
+
+
+// Add new data class for search results
+data class SearchResultItem(
+    val title: String,
+    val url: String,
+    val description: String,
+    val index: Int
+)
 
 /** Base class for a chat message. */
 open class ChatMessage(
@@ -73,6 +83,29 @@ open class ChatMessage(
       disableBubbleShape = disableBubbleShape,
     )
   }
+}
+
+/** Chat message for showing search results. */
+class ChatMessageSearchResults(
+    val query: String,
+    val results: List<SearchResultItem>,
+    override val latencyMs: Float = 0f,
+    override val accelerator: String = "",
+) : ChatMessage(
+    type = ChatMessageType.SEARCH_RESULTS,
+    side = ChatSide.AGENT,
+    latencyMs = latencyMs,
+    accelerator = accelerator,
+    disableBubbleShape = true,  // Full width, no bubble
+) {
+    override fun clone(): ChatMessageSearchResults {
+        return ChatMessageSearchResults(
+            query = query,
+            results = results,
+            latencyMs = latencyMs,
+            accelerator = accelerator,
+        )
+    }
 }
 
 /** Chat message for showing loading status. */

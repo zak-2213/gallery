@@ -57,6 +57,9 @@ open class LlmChatViewModelBase() : ChatViewModel() {
     onError: (String) -> Unit,
     allowThinking: Boolean = false,
   ) {
+    // Add this property to hold tools
+    var tools: List<ToolProvider> = listOf()
+
     val accelerator = model.getStringConfigValue(key = ConfigKeys.ACCELERATOR, defaultValue = "")
     viewModelScope.launch(Dispatchers.Default) {
       setInProgress(true)
